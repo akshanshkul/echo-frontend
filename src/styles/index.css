@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+
+/* Design tokens (light/dark values live in variables.css and switch with <html data-theme>) */
+@import './variables.css';
+
+/* Legacy component styles live in the `components` layer so Tailwind utilities always win over them */
+@import './reset.css' layer(base);
+@import './layout.css' layer(components);
+@import './components.css' layer(components);
+@import './chat.css' layer(components);
+@import './responsive.css' layer(components);
+@import './animations.css';
+@import './app.css' layer(components);
+
+/* Map the tokens to Tailwind: bg-elev, text-ink-2, border-line, bg-accent, shadow-pop ... (theme-aware, no dark: prefix needed) */
+@theme inline {
+  --color-list: var(--bg-list);
+  --color-chat: var(--bg-chat);
+  --color-head: var(--bg-head);
+  --color-field: var(--bg-input);
+  --color-elev: var(--bg-elev);
+  --color-hover: var(--bg-hover);
+  --color-selected: var(--bg-active);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-ink: var(--text);
+  --color-ink-2: var(--text-2);
+  --color-ink-3: var(--text-3);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-online: var(--online);
+  --color-warn: var(--warn);
+  --font-sans: var(--font);
+  --font-mono: var(--mono);
+  --shadow-pop: var(--sh-2);
+  --shadow-modal: var(--sh-3);
+  --ease-out-soft: var(--ease);
+}
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@layer base {
+  button:not(:disabled),
+  [role='button'] {
+    cursor: pointer;
+  }
+  button {
+    text-align: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+}
