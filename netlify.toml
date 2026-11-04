@@ -1,0 +1,7 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Render backend; baked in at build time (REST + Socket.IO go straight to it, CORS is allowed there)
+  VITE_API_URL = "https://echo-backend-8mi8.onrender.com"
