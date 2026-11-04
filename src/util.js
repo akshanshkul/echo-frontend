@@ -81,7 +81,7 @@ export function presence(u) {
 export const plain = (s) =>
   String(s || '')
     .replace(/```[\w+#.-]*[ \t]*[^\n`]*\n?([\s\S]*?)```/g, '$1')
-    .replace(/[*_~`]/g, '')
+    .replace(/[*_~`=|]{2,}|[*_~`]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 
@@ -101,6 +101,11 @@ function inline(s) {
     .replace(/__([^_\n]+)__/g, '<u>$1</u>')
     .replace(/(^|[\s(])_([^_\n]+)_(?=$|[\s.,!?)])/g, '$1<i>$2</i>')
     .replace(/~~([^~\n]+)~~/g, '<s>$1</s>')
+    .replace(/==([^=\n]+)==/g, '<mark>$1</mark>')
+    .replace(
+      /\|\|([^|\n]+)\|\|/g,
+      '<span class="spoiler" tabindex="0" title="Hover or tap to reveal">$1</span>',
+    )
     .replace(
       /(^|[\s(])@([\p{L}][\p{L}\d_.]*)/gu,
       (m, p, n) => `${p}<span class="mention">@${n}</span>`,
@@ -137,7 +142,10 @@ export function fmt(raw) {
   };
   lines.forEach((ln, i) => {
     let m;
-    if ((m = ln.match(/^\s*[-•*] (.*)/))) {
+    if ((m = ln.match(/^(#{1,3}) (.+)/))) {
+      close();
+      out += `<div class="hd hd${m[1].length}">` + inline(m[2]) + '</div>';
+    } else if ((m = ln.match(/^\s*[-•*] (.*)/))) {
       if (list !== 'ul') {
         close();
         out += '<ul>';

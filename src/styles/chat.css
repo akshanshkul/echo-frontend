@@ -331,6 +331,41 @@
   border-radius: 4px;
   color: var(--code-text);
 }
+.text mark {
+  background: color-mix(in srgb, #facc15 45%, transparent);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+.text .spoiler {
+  background: var(--text-3);
+  color: transparent;
+  border-radius: 4px;
+  padding: 0 3px;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.text .spoiler:hover,
+.text .spoiler:focus {
+  background: var(--accent-soft);
+  color: inherit;
+  outline: 0;
+}
+.text .hd {
+  font-weight: 700;
+  line-height: 1.3;
+}
+.text .hd1 {
+  font-size: 1.35em;
+}
+.text .hd2 {
+  font-size: 1.2em;
+}
+.text .hd3 {
+  font-size: 1.08em;
+}
 .text .mention {
   color: var(--accent);
   background: var(--accent-soft);
@@ -1216,6 +1251,9 @@
   font-size: var(--fs-msg);
   height: 28px;
   overflow-y: auto;
+}
+.cbox textarea:focus-visible {
+  outline: 0; /* the .cbox:focus-within border is the focus ring */
 }
 .cbox textarea::placeholder {
   color: var(--text-3);

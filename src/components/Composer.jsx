@@ -129,9 +129,14 @@ export default function Composer({ conv, reply, editing, onCancel, files, clearF
   };
   const onKey = (e) => {
     const mod = e.ctrlKey || e.metaKey;
-    if (mod && ['b', 'i', 'u'].includes(e.key.toLowerCase())) {
+    if (mod && ['b', 'i', 'u'].includes(e.key.toLowerCase()) && !e.shiftKey) {
       e.preventDefault();
       wrap({ b: '**', i: '_', u: '__' }[e.key.toLowerCase()]);
+      return;
+    }
+    if (mod && e.shiftKey && ['x', 'h'].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+      wrap({ x: '~~', h: '==' }[e.key.toLowerCase()]);
       return;
     }
     if (
@@ -174,6 +179,22 @@ export default function Composer({ conv, reply, editing, onCancel, files, clearF
     setTimeout(() => {
       el.focus();
       el.setSelectionRange(s + a.length, s + a.length + sel.length);
+    });
+  };
+  const clearFmt = () => {
+    const el = ta.current,
+      s = el.selectionStart,
+      e = el.selectionEnd;
+    if (s === e) return el.focus();
+    const out = text
+      .slice(s, e)
+      .replace(/(\*\*|__|~~|==|\|\||`)/g, '')
+      .replace(/(^|\s)_([^_\n]+)_(?=$|\s)/g, '$1$2')
+      .replace(/^(#{1,3}|>|-|\d+\.) /gm, '');
+    setText(text.slice(0, s) + out + text.slice(e));
+    setTimeout(() => {
+      el.focus();
+      el.setSelectionRange(s, s + out.length);
     });
   };
   const prefix = (fn) => {
@@ -400,8 +421,37 @@ export default function Composer({ conv, reply, editing, onCancel, files, clearF
               className="sm"
               onClick={() => wrap('~~')}
             />
+            <IconBtn
+              n="highlight"
+              s={17}
+              label="Highlight"
+              className="sm"
+              onClick={() => wrap('==')}
+            />
+            <IconBtn
+              n="lock"
+              s={17}
+              label="Spoiler (hidden until hover or tap)"
+              className="sm"
+              onClick={() => wrap('||')}
+            />
+            <IconBtn n="ban" s={17} label="Clear formatting" className="sm" onClick={clearFmt} />
             <span className="sp" />
             <IconBtn n="code" s={17} label="Inline code" className="sm" onClick={() => wrap('`')} />
+            <IconBtn
+              n="codeblock"
+              s={17}
+              label="Code block"
+              className="sm"
+              onClick={() => wrap('```\n', '\n```')}
+            />
+            <IconBtn
+              n="h-1"
+              s={17}
+              label="Heading"
+              className="sm"
+              onClick={() => prefix((l) => (/^#{1,3} /.test(l) ? l.replace(/^#+ /, '') : '# ' + l))}
+            />
             <IconBtn
               n="list"
               s={17}
